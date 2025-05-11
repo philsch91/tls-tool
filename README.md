@@ -59,5 +59,18 @@ java [-Djava.security.keystore.type=<pkcs12/jks> -Djavax.net.ssl.keyStoreType=<p
 
 ## Package
 ```
-mvn [--settings settings.xml] clean package [-X]
+mvn [-X] clean package [-s|--settings settings.xml]
+```
+
+## Notes
+The default truststore is located at `$JAVA_HOME/lib/security/cacerts`.
+The default keytool is located at `$JAVA_HOME/bin/keytool`.
+
+This tool is an alternative for the use of `openssl` and `keytool`.
+There may be problems with the use of `*.pem` files containing more than one certificate.
+If `openssl` and `keytool` are used to import a certificate in a `*.pem` file, the file should also contain the root and intermediate certificates preceding the certificate.
+
+```
+openssl x509 -outform der -in certificate.pem -out certificate.der
+keytool -import -alias your-alias -keystore cacerts -file certificate.der
 ```
