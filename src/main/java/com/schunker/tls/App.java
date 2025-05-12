@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 import java.net.URLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLSocketFactory;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -88,6 +89,9 @@ public class App {
 
         SSLTrustManagerHelper trustManagerHelper = new SSLTrustManagerHelper(keystorePath, keystorePassword);
 
+        //System.setProperty("javax.net.ssl.trustStore", truststorePath);
+        //System.setProperty("javax.net.ssl.trustStorePassword", truststorePassword);
+
         if (!truststorePath.isEmpty()) {
             trustManagerHelper.setTrustStorePath(truststorePath);
         }
@@ -141,15 +145,19 @@ public class App {
             System.exit(3);
         }
 
-        urlConnectionWrapper.urlConnection.setSSLSocketFactory(sslContext.getSocketFactory());
+        SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+        urlConnectionWrapper.urlConnection.setSSLSocketFactory(sslSocketFactory);
         urlConnectionWrapper.urlConnection.setConnectTimeout(10 * 1000);
         urlConnectionWrapper.setDefaultRequestParameters();
 
         if (System.getProperty("ssl.SocketFactory.provider", "default").equals("WireLogSSLSocketFactory")) {
             System.out.println("Use WireLogSSLSocketFactory");
-            WireLogSSLSocketFactory socketFactory = new WireLogSSLSocketFactory(sslContext.getSocketFactory());
-            urlConnectionWrapper.urlConnection.setSSLSocketFactory(socketFactory);
+            //sslSocketFactory = new WireLogSSLSocketFactory(sslSocketFactory);
+            WireLogSSLSocketFactory wireLogSSLSocketFactory = new WireLogSSLSocketFactory(sslSocketFactory);
+            urlConnectionWrapper.urlConnection.setSSLSocketFactory(wireLogSSLSocketFactory);
         }
+
+        //urlConnectionWrapper.urlConnection.setSSLSocketFactory(sslSocketFactory);
 
         /*
         List<Field> fields = ReflectionHelper.getDeclaredFields(urlConnection.getClass());

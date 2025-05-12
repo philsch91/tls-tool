@@ -82,23 +82,6 @@ public class SSLTrustManagerHelper {
         return sslContext;
     }
 
-    private static KeyManagerFactory getKeyManagerFactory(String keystorePath, String keystorePassword) throws NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException {
-        KeyStore keyStore = loadKeyStore(keystorePath, keystorePassword);
-        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        keyManagerFactory.init(keyStore, keystorePassword.toCharArray());
-        return keyManagerFactory;
-    }
-
-    private static TrustManagerFactory getTrustManagerFactory(String truststorePath, String truststorePassword) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        KeyStore trustStore = null;
-        if (truststorePath != null && truststorePassword != null) {
-            trustStore = loadKeyStore(truststorePath, truststorePassword);
-        }
-        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        trustManagerFactory.init(trustStore);
-        return trustManagerFactory;
-    }
-
     private static KeyStore loadKeyStore(String keystorePath, String keystorePassword) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         /*
         try (InputStream keystoreInputStream = SSLTrustManagerHelper.class.getClassLoader().getResourceAsStream(keystorePath)) {
@@ -119,6 +102,23 @@ public class SSLTrustManagerHelper {
 
         keystoreInputStream.close();
         return keystore;
+    }
+
+    private static KeyManagerFactory getKeyManagerFactory(String keystorePath, String keystorePassword) throws NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, UnrecoverableKeyException {
+        KeyStore keyStore = loadKeyStore(keystorePath, keystorePassword);
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        keyManagerFactory.init(keyStore, keystorePassword.toCharArray());
+        return keyManagerFactory;
+    }
+
+    private static TrustManagerFactory getTrustManagerFactory(String truststorePath, String truststorePassword) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+        KeyStore trustStore = null;
+        if (truststorePath != null && truststorePassword != null) {
+            trustStore = loadKeyStore(truststorePath, truststorePassword);
+        }
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        trustManagerFactory.init(trustStore);
+        return trustManagerFactory;
     }
 
     private boolean isBlank(String str) {

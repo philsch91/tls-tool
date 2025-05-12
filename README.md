@@ -48,6 +48,11 @@ mvn dependency:tree [-Ddetail=true] | grep <dependency-name>
 mvn test
 ```
 
+## Compile
+```
+mvn compile
+```
+
 ## Execute
 ```
 # Windows
